@@ -5,16 +5,20 @@ import { connect } from 'react-redux';
 class YelpForm extends Component {
   state = {
     location: '',
+    search_term: '',
+    sort_by: { value: 'rating' },
   };
-  handleInput = e => {
+  handleInput = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  search = e => {
+  search = (e) => {
     e.preventDefault();
-    this.props.fetchListings(this.state.location);
+    this.props.fetchListings(this.state);
     this.setState({
       location: '',
+      search_term: '',
+      sort_by: { value: 'rating' },
     });
   };
 
@@ -24,10 +28,22 @@ class YelpForm extends Component {
         <form>
           <input
             onChange={this.handleInput}
-            type="number"
-            name="zip"
-            placeholder="Zip"
+            type="text"
+            name="location"
+            placeholder="Location"
           />
+          <input
+            onChange={this.handleInput}
+            type="text"
+            name="search_term"
+            placeholder="Search Term"
+          />
+          <select onChange={this.handleInput} value={this.state.sort_by.value}>
+            <option value="rating" />
+            <option value="best_match" />
+            <option value="review_count" />
+            <option value="distance" />
+          </select>
           <button onClick={this.search}> Search Businesses</button>
         </form>
       </div>
@@ -35,7 +51,7 @@ class YelpForm extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     fetchingListings: state.fetchingListings,
     error: state.error,
